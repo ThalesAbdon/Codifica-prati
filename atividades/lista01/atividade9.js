@@ -4,7 +4,7 @@ do mesmo.
 */
 
 const input = require("prompt-sync")();
-const numero = parseInt(input("Digite o código de origem do produto: "))
+const numero = Number(input("Digite o código de origem do produto: "))
 switch (numero) {
     case 1:
         console.log("Sul");
