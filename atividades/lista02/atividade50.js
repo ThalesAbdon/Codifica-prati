@@ -29,6 +29,7 @@ disponibilidade de quartos.
 ○ Permitir que o usuário avalie o hotel após a estadia, e armazenar essas
 avaliações dentro do objeto do hotel.
 */
+const input = require('prompt-sync')()
 
 class Hotel {
     constructor(id,nome,cidade,quartoTotais){
@@ -64,16 +65,17 @@ const sistemaReservaHoteis = {
         avaliacoes: []
     };
     this.hoteis.push(hotel);
-    console.log(`O Hotel: ${nome} na cidade ${cidade} com ${quartosTotais} quartos foi adicionado com sucesso!`);
+    console.log(`O Hotel: ${nome} na cidade ${cidade} com ${quartosTotais} quartos foi adicionado com sucesso!\n`);
     },
 
     findByCity(cidade) {
     const hoteisNaCidade = this.hoteis.filter(hotel => hotel.cidade.toLowerCase() === cidade.toLowerCase());
         if (hoteisNaCidade.length > 0) {
-            console.log(`Hotéis na cidade ${cidade}:`);
+            console.log(`\nHotéis na cidade ${cidade}:`);
             hoteisNaCidade.forEach(hotel => {
             console.log(`ID: ${hotel.id}, Nome: ${hotel.nome}, Quartos Disponíveis: ${hotel.quartosDisponiveis}`);
             });
+            console.log('\n')
         } else {
             console.log(`Não foram encontrados hoteis na cidade ${cidade}.`);
         }
@@ -130,6 +132,7 @@ const sistemaReservaHoteis = {
         const hotel = this.hoteis.find(h => h.id === reserva.idHotel);
         console.log(`ID Reserva: ${reserva.idReserva}, Hotel: ${hotel.nome}, Cliente: ${reserva.nomeCliente}`);
     });
+    console.log('\n')
     },
 
     checkIn(idReserva) {
@@ -179,27 +182,145 @@ const sistemaReservaHoteis = {
         }
     }
 };
+
+function validateInput(msg){
+    let value;
+    do {
+        value = input(msg).trim();
+        if(!Number.isInteger(Number(value)) || isNaN(value) || Number(value) < 0 || Number(value) > 9){
+            console.log('Por favor, escolha uma opção válida!')
+        }
+    } while(!Number.isInteger(Number(value)) || isNaN(value) || Number(value) < 0 || Number(value) > 9)
+
+    return parseInt(value)
+}
+
+function validateNameInput(msg){
+    let value;
+    do{
+        value = input(msg).trim();
+        if(!validateName(value)) {
+            console.log("Por favor, digite um nome válido!")
+        }
+    }while(!validateName(value))
+
+    value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+
+    return value;
+}
+
+function validateName(name){
+  const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s']+$/;
+  return regex.test(name);
+}
+
+function validateIntegerInput(msg){
+    let value;
+    do {
+        value = input(msg).trim();
+        if(!Number.isInteger(Number(value)) || isNaN(value) || Number(value) <= 0){
+            console.log('Por favor, digite um valor inteiro positivo.')
+        }
+    } while(!Number.isInteger(Number(value)) || isNaN(value) || Number(value) <= 0)
+
+    return parseInt(value)
+}
+
+function validateRateInput(msg){
+    let value;
+    do {
+        value = input(msg).trim();
+        if(!Number.isInteger(Number(value)) || isNaN(value) || Number(value) < 1 || Number(value) > 5){
+            console.log('Por favor, digite um valor inteiro positivo.')
+        }
+    } while(!Number.isInteger(Number(value)) || isNaN(value) || Number(value) < 1 || Number(value) > 5)
+
+    return parseInt(value)
+}
+
+function menu(){
+    console.log("1 - Adicionar um Hotel")
+    console.log("2 - Buscar Hotel ( por cidade )")
+    console.log("3 - Reservar um quarto")
+    console.log("4 - Listar Reservas")
+    console.log("5 - Fazer Check-in")
+    console.log("6 - Fazer Check-out")
+    console.log("7 - Cancelar Reserva")
+    console.log("8 - Avaliar Hospedagem")
+    console.log("9 - Gerar Relatório de Ocupação")
+    console.log("0 - Sair")
+    return validateInput('Escolha uma Opção: ')
+}
+
+function menu_choice(opt){
+    let hotel_name
+    let city_name
+    let total_rooms
+    let hotel_id
+    let guest_name
+    let id_reserva
+    let rate
+    switch (opt) {
+        case 1:
+          hotel_name = validateNameInput('Digite o Nome do Hotel: ')
+          city_name =  validateNameInput('Digite o nome da cidade: ')
+          total_rooms =  validateIntegerInput('Digite quantos quartos o Hotel possui: ')
+          sistemaReservaHoteis.addHotel(hotel_name,city_name,total_rooms)
+          break;
+        case 2:
+          city_name = validateNameInput('Digite o nome da cidade: ')
+          sistemaReservaHoteis.findByCity(city_name)
+          break;
+        case 3:
+          hotel_id = validateIntegerInput('Digite o Id do hotel: ')
+          guest_name = validateNameInput('Digite o seu Nome: ')
+          sistemaReservaHoteis.bookRoom(hotel_id, guest_name);
+          break;
+        case 4:  
+          sistemaReservaHoteis.listBooks();
+          break;
+        case 5:
+            id_reserva = validateIntegerInput("Digite o Id da Reserva: ")
+            sistemaReservaHoteis.checkIn()
+            break;
+        case 6:
+            id_reserva = validateIntegerInput("Digite o Id da Reserva: ")
+            sistemaReservaHoteis.checkOut(id_reserva)
+            break;
+        case 7:
+            id_reserva = validateIntegerInput("Digite o Id da Reserva: ")
+            sistemaReservaHoteis.cancelBook(id_reserva)
+            break; 
+        case 8:
+            hotel_id = validateIntegerInput("Digite o Id do Hotel: ")
+            guest_name = validateIntegerInput("Digite o seu nome: ")
+            rate = validateRateInput("Digite sua avalição ( de 1 a 5 )")
+            sistemaReservaHoteis.rateHotel(hotel_id, guest_name, rate)
+            break;   
+        case 9:
+            hotel_id = validateIntegerInput("Digite o Id do Hotel: ")
+            sistemaReservaHoteis.OccupationReport(hotel_id)
+            break; 
+        default:
+            console.log("Obrigado por escolher o +Hotel, até mais!")
+            on = false
+      }
+    
+}
+
+let on = true
+console.log(" - - - - - Bem-vindo ao +Hotel! - - - - -\n")
+while (on){
+   opt = menu()
+   menu_choice(opt)
+}
+    
+
   
+
   
-  sistemaReservaHoteis.addHotel("Mercure", "São Paulo", 10);
-  sistemaReservaHoteis.addHotel("Embaixador", "Porto Alegre", 5);
+//   sistemaReservaHoteis.rateHotel(1, "Ash Ketchum", 5);
+//   sistemaReservaHoteis.rateHotel(1, "Homer Simpson", 4);
   
-  sistemaReservaHoteis.findByCity("Porto Alegre");
-  
-  sistemaReservaHoteis.bookRoom(1, "Ash Ketchum");
-  sistemaReservaHoteis.bookRoom(1, "Homer Simpson");
-  
-  sistemaReservaHoteis.listBooks();
-  
-  sistemaReservaHoteis.checkIn(1);
-  sistemaReservaHoteis.checkOut(1);
-  
-  sistemaReservaHoteis.cancelBook(2);
-  
-  sistemaReservaHoteis.listBooks();
-  
-  sistemaReservaHoteis.rateHotel(1, "Ash Ketchum", 5);
-  sistemaReservaHoteis.rateHotel(1, "Homer Simpson", 4);
-  
-  sistemaReservaHoteis.OccupationReport(1);
+//   sistemaReservaHoteis.OccupationReport(1);
   

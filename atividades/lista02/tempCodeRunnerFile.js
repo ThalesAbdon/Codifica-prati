@@ -1,0 +1,1 @@
+sistemaReservaHoteis.rateHotel
