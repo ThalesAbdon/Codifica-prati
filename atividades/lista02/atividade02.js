@@ -8,7 +8,7 @@ const input = require('prompt-sync')()
 function verifySpeed(speed) {
     if(speed > 80){
         const mulct = ((speed - 80) * 5)
-        return 'você foi multado! deve pagar: ' + mulct + 'R$'
+        console.log('você foi multado! deve pagar: ' + mulct + 'R$')
     }
 }
 
@@ -25,4 +25,4 @@ function validateInput(msg){
 }
 
 let car_speed = validateInput("Digite a velocidade do carro: ")
-console.log(verifySpeed(car_speed))
+verifySpeed(car_speed)

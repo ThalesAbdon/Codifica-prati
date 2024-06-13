@@ -21,6 +21,7 @@ function validateVectorInput(msg){
     return parseInt(value)
 }
 
+
 function equalArrs(arr1, arr2) {
     if (arr1.length !== arr2.length) return false;
     for (let i = 0; i < arr1.length; i++) {
@@ -39,10 +40,17 @@ function verifyBets(result,bets) {
 
 function readFiveElements(){
     let vector= []
-    for(i = 0; i < 5; i++){
-        let number = validateVectorInput(`Digite o número para o endereço de memória ${i}:`)  
-        vector.push(number)
+    let count = 0
+    while(vector.length < 5){
+        let number = validateVectorInput(`Digite o número para o endereço de memória ${count}:`)  
+        if(!vector.includes(number)){
+            vector.push(number)
+            count++   
+        }else{
+            console.log("Esse número já foi escolhido! Por favor, escolha outro número")
+        }
     }
+    
     return vector
 }
 
