@@ -11,5 +11,7 @@ for(i = 0; i <= 20; i++){
 }
 
 console.log(arr)
-arr.sort()
+arr.sort(function(a, b) {
+    return a - b;
+  });
 console.log(arr)
