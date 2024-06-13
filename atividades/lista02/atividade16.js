@@ -7,7 +7,7 @@ depois coloque o vetor em ordem crescente, mostrando no final os valores ordenad
 // para fins didáticos limitei o range do rand entre 0 e 10.000
 arr = []
 for(i = 0; i <= 20; i++){
-    arr[i] = Math.floor(Math.random() * 10000);
+    arr[i] = Math.floor(Math.random() * 100);
 }
 
 console.log(arr)
